@@ -7,8 +7,8 @@ import java.util.logging.Logger;
 
 public class Cliente {
     public static void main(String[] args) {
-        String ipLocal = "localhost";
-        String ipServidor = "localhost";
+        String ipLocal = "192.168.3.25";
+        String ipServidor = "192.168.3.25";
         int puerto = 8080;
 
         try {

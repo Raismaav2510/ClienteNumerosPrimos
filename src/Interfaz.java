@@ -7,7 +7,8 @@ import java.util.logging.Logger;
 
 public class Interfaz extends JFrame implements ActionListener {
 
-    Controlador controlador;
+    private Controlador controlador;
+    private Actualizador actualizador;
     private JButton botonSecuencial = new JButton("Secuencial");
     private JButton botonForkJoin = new JButton("Fork/Join");
     private JButton botonExecutor = new JButton("Executor");
@@ -24,6 +25,7 @@ public class Interfaz extends JFrame implements ActionListener {
 
     public Interfaz(Controlador controlador) {
         this.controlador = controlador;
+        this.actualizador = new Actualizador(this, controlador);
         setTitle("Numeros primos");
         setSize(500, 300);
         setLocationRelativeTo(null);
@@ -42,6 +44,7 @@ public class Interfaz extends JFrame implements ActionListener {
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
+        this.actualizador.start();
     }
     public void texts(){
         escribir.setBounds(20,20,140,25);
@@ -91,6 +94,10 @@ public class Interfaz extends JFrame implements ActionListener {
         add(tiempoExecutor);
     }
 
+    public void actualizarAreaTodos(String todos){
+        areaTodos.setText(todos);
+    }
+
     private void limpiar() {
         escribir.setText("");
         areaPrimos.setText("");
@@ -105,7 +112,12 @@ public class Interfaz extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == botonLimpiar){
-            limpiar();
+            try {
+                controlador.limpiar();
+                limpiar();
+            } catch (RemoteException ex) {
+                Logger.getLogger(Interfaz.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
         if (e.getSource() == botonGuardar){
@@ -113,7 +125,6 @@ public class Interfaz extends JFrame implements ActionListener {
                 controlador.guardar(Integer.parseInt(escribir.getText()));
                 escribir.setEditable(false);
                 botonGuardar.setText("Rehacer");
-                areaTodos.setText(controlador.imprimir());
                 areaPrimos.setText("");
             } catch(NumberFormatException nfe){
                 limpiar();
@@ -126,12 +137,15 @@ public class Interfaz extends JFrame implements ActionListener {
         if (e.getSource() == botonSecuencial){
             long tiempoEjecucion = 0;
             try{
-                areaPrimos.setText(controlador.buscarSecuencial());
-                tiempoEjecucion = controlador.getTiempo();
-                if (tiempoEjecucion >= 1000)
-                    tiempoSecuencial.setText("Tiempo: " + (tiempoEjecucion / 1000) + " s");
-                else
-                    tiempoSecuencial.setText("Tiempo: " + tiempoEjecucion + " ms");
+                if (controlador.verificar()){
+                    areaPrimos.setText(controlador.buscarSecuencial());
+                    tiempoEjecucion = controlador.getTiempo();
+                    if (tiempoEjecucion >= 1000)
+                        tiempoSecuencial.setText("Tiempo: " + (tiempoEjecucion / 1000) + " s");
+                    else
+                        tiempoSecuencial.setText("Tiempo: " + tiempoEjecucion + " ms");
+                } else
+                    JOptionPane.showMessageDialog(null, "Esperando al otro usuario");
             } catch (RemoteException ex) {
                 Logger.getLogger(Interfaz.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -140,12 +154,15 @@ public class Interfaz extends JFrame implements ActionListener {
         if (e.getSource() == botonForkJoin){
             long tiempoEjecucion = 0;
             try{
-                areaPrimos.setText(controlador.buscarForkJoin());
-                tiempoEjecucion = controlador.getTiempo();
-                if (tiempoEjecucion >= 1000)
-                    tiempoForkJoin.setText("Tiempo: " + (tiempoEjecucion / 1000) + " s");
-                else
-                    tiempoForkJoin.setText("Tiempo: " + tiempoEjecucion + " ms");
+                if (controlador.verificar()){
+                    areaPrimos.setText(controlador.buscarForkJoin());
+                    tiempoEjecucion = controlador.getTiempo();
+                    if (tiempoEjecucion >= 1000)
+                        tiempoForkJoin.setText("Tiempo: " + (tiempoEjecucion / 1000) + " s");
+                    else
+                        tiempoForkJoin.setText("Tiempo: " + tiempoEjecucion + " ms");
+                } else
+                    JOptionPane.showMessageDialog(null, "Esperando al otro usuario");
             } catch (RemoteException ex) {
                 Logger.getLogger(Interfaz.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -154,12 +171,15 @@ public class Interfaz extends JFrame implements ActionListener {
         if (e.getSource() == botonExecutor){
             long tiempoEjecucion = 0;
             try{
-                areaPrimos.setText(controlador.buscarExecutor());
-                tiempoEjecucion = controlador.getTiempo();
-                if (tiempoEjecucion >= 1000)
-                    tiempoExecutor.setText("Tiempo: " + (tiempoEjecucion / 1000) + " s");
-                else
-                    tiempoExecutor.setText("Tiempo: " + tiempoEjecucion + " ms");
+                if (controlador.verificar()){
+                    areaPrimos.setText(controlador.buscarExecutor());
+                    tiempoEjecucion = controlador.getTiempo();
+                    if (tiempoEjecucion >= 1000)
+                        tiempoExecutor.setText("Tiempo: " + (tiempoEjecucion / 1000) + " s");
+                    else
+                        tiempoExecutor.setText("Tiempo: " + tiempoEjecucion + " ms");
+                } else
+                    JOptionPane.showMessageDialog(null, "Esperando al otro usuario");
             } catch (RemoteException ex) {
                 Logger.getLogger(Interfaz.class.getName()).log(Level.SEVERE, null, ex);
             }
