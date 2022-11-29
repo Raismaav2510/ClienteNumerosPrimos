@@ -137,7 +137,7 @@ public class Interfaz extends JFrame implements ActionListener {
         if (e.getSource() == botonSecuencial){
             long tiempoEjecucion = 0;
             try{
-                if (controlador.verificar()){
+                if (controlador.verificarArregloFinal()){
                     areaPrimos.setText(controlador.buscarSecuencial());
                     tiempoEjecucion = controlador.getTiempo();
                     if (tiempoEjecucion >= 1000)
@@ -154,7 +154,7 @@ public class Interfaz extends JFrame implements ActionListener {
         if (e.getSource() == botonForkJoin){
             long tiempoEjecucion = 0;
             try{
-                if (controlador.verificar()){
+                if (controlador.verificarArregloFinal()){
                     areaPrimos.setText(controlador.buscarForkJoin());
                     tiempoEjecucion = controlador.getTiempo();
                     if (tiempoEjecucion >= 1000)
@@ -171,7 +171,7 @@ public class Interfaz extends JFrame implements ActionListener {
         if (e.getSource() == botonExecutor){
             long tiempoEjecucion = 0;
             try{
-                if (controlador.verificar()){
+                if (controlador.verificarArregloFinal()){
                     areaPrimos.setText(controlador.buscarExecutor());
                     tiempoEjecucion = controlador.getTiempo();
                     if (tiempoEjecucion >= 1000)
